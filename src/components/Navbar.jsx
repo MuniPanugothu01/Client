@@ -14,6 +14,7 @@ const Navbar = () => {
     navigate,
     setSearchQuery,
     searchQuery,
+    getCartCount,
   } = useAppContext();
   // create a function to logout the user
   const Logout = async () => {
@@ -63,7 +64,7 @@ const Navbar = () => {
             className="w-6 opacity-80"
           />
           <button className="absolute -top-2 -rig ht-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
-            3
+            {getCartCount()}
           </button>
         </div>
         {/* whenever user can not logged in */}
@@ -97,14 +98,30 @@ const Navbar = () => {
         )}
       </div>
 
-      <button
-        onClick={() => (open ? setOpen(false) : setOpen(true))}
-        aria-label="Menu"
-        className="sm:hidden"
-      >
-        {/* Menu Icon SVG */}
-        <img src={assets.menu_icon} alt="menu_icon" />
-      </button>
+      <div className="flex items-center gap-6 sm:hidden">
+        <div
+          onClick={() => navigate("/cart")}
+          className="relative cursor-pointer"
+        >
+          <img
+            src={assets.cart_icon}
+            alt="CartIcon"
+            className="w-6 opacity-80"
+          />
+          <button className="absolute -top-2 -rig ht-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
+            {getCartCount()}
+          </button>
+        </div>
+
+        <button
+          onClick={() => (open ? setOpen(false) : setOpen(true))}
+          aria-label="Menu"
+          className=""
+        >
+          {/* Menu Icon SVG */}
+          <img src={assets.menu_icon} alt="menu_icon" />
+        </button>
+      </div>
 
       {/* Mobile Menu */}
       {/* when ever open state is true then only open state can open */}

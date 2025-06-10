@@ -8,7 +8,8 @@ import Footer from "./components/Footer";
 import { useAppContext } from "./context/AppContect";
 import Login from "./components/Login";
 import AllProducts from "./pages/AllProducts";
-
+import ProductCategory from "./pages/ProductCategory";
+import ProductDetails from "./pages/ProductDetails";
 function App() {
   // seller bath
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -18,7 +19,7 @@ function App() {
   return (
     <>
       {/* this navbar can display normal user not seller */}
-      {isSellerPath ? null : <Navbar />}  
+      {isSellerPath ? null : <Navbar />}
       {showUserLogin ? <Login /> : null}
       <Toaster />
       <div
@@ -27,6 +28,8 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/products" element={<AllProducts />} />
+          <Route path="/products/:category" element={<ProductCategory />} />
+          <Route path="/products/:category/:id" element={<ProductDetails />} />
         </Routes>
         {!isSellerPath && <Footer />}
       </div>

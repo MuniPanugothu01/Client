@@ -10,7 +10,6 @@ export const AppContextProvider = ({ children }) => {
   // currency insert into to Appcontext
   const currency = import.meta.env.VITE_CURRENCY;
 
-
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(false);
@@ -21,9 +20,8 @@ export const AppContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   //lets create the cart data
   const [cartItems, setCartItems] = useState({});
-// Search query
-const [searchQuery, setSearchQuery] = useState({})
-
+  // Search query
+  const [searchQuery, setSearchQuery] = useState({});
 
   // fetech the products
   const fetchProducts = async () => {
@@ -43,26 +41,47 @@ const [searchQuery, setSearchQuery] = useState({})
     toast.success("added to cart!");
   };
 
-// Update cart Item Quantity
-const updateCartItem = (itemId, quantity) =>{
-let cartData = structuredClone(itemId)
-cartData[itemId] = quantity;
-setCartItems(cartData);
-toast.success('Cart Updated!')
-}
+  // Update cart Item Quantity
+  const updateCartItem = (itemId, quantity) => {
+    let cartData = structuredClone(itemId);
+    cartData[itemId] = quantity;
+    setCartItems(cartData);
+    toast.success("Cart Updated!");
+  };
 
-// to remove Product from cart
-const removeFromCart = (itemId) =>{
-let cartData = structuredClone(cartItems)
-if(cartData[itemId]){
-  cartData[itemId] -= 1
-  if(cartData[itemId] === 0){
-delete cartData[itemId];
-  }
-}
-toast.success('Removed from cart!')
-setCartItems(cartData);
-}
+  // to remove Product from cart
+  const removeFromCart = (itemId) => {
+    let cartData = structuredClone(cartItems);
+    if (cartData[itemId]) {
+      cartData[itemId] -= 1;
+      if (cartData[itemId] === 0) {
+        delete cartData[itemId];
+      }
+    }
+    toast.success("Removed from cart!");
+    setCartItems(cartData);
+  };
+
+  // Get Cart Item Count
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const item in cartItems) {
+      totalCount += cartItems[item];
+    }
+    return totalCount; // it total count in cart icon diaply
+  };
+
+  //Get cart  Total Amount
+  const getcartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((product) => product._id === items);
+      if (cartItems[items] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItems[items];
+      }
+    }
+    return Math.flor(totalAmount * 100) / 100;
+  };
 
   // use the useEffect whenever the component is render
   useEffect(() => {
@@ -85,6 +104,8 @@ setCartItems(cartData);
     removeFromCart,
     searchQuery,
     setSearchQuery,
+    getcartAmount,
+    getCartCount, 
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
