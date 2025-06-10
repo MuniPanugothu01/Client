@@ -1,24 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-// import Logoimg from "../assets/Logo.png";
-// import assets images
-// import SearchIcon from "../assets/search_icon.svg";
-// import Nav_CartIcon from "../assets/nav_cart_icon.svg";
-// import MenuIcon from "../assets/menu_icon.svg";
-// import ProfileIcon from "../assets/profile_icon.png";
 
 // import assests folder
 import { assets } from "../assets/assets";
-
-
 import { useAppContext } from "../context/AppContect";
+
 const Navbar = () => {
   const [open, setOpen] = React.useState(false);
-  const { user, setUser, setShowUserLogin, navigate } = useAppContext();
+  const {
+    user,
+    setUser,
+    setShowUserLogin,
+    navigate,
+    setSearchQuery,
+    searchQuery,
+  } = useAppContext();
   // create a function to logout the user
   const Logout = async () => {
     setUser(null);
     navigate("/home");
+  };
+  // UseEffect() for search bar
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      navigate("/products");
+    }
+  }, [searchQuery]);
+  // SearchHandleFunction
+  const SearchHandleFunction = (event) => {
+    setSearchQuery(event.target.value);
   };
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
@@ -35,6 +45,7 @@ const Navbar = () => {
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
+            onChange={SearchHandleFunction}
             className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
             type="text"
             placeholder="Search products"
@@ -46,7 +57,11 @@ const Navbar = () => {
           onClick={() => navigate("/cart")}
           className="relative cursor-pointer"
         >
-          <img src={assets.cart_icon} alt="CartIcon" className="w-6 opacity-80" />
+          <img
+            src={assets.cart_icon}
+            alt="CartIcon"
+            className="w-6 opacity-80"
+          />
           <button className="absolute -top-2 -rig ht-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
             3
           </button>

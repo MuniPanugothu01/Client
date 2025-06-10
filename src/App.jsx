@@ -18,7 +18,7 @@ function App() {
   return (
     <>
       {/* this navbar can display normal user not seller */}
-      {isSellerPath ? null : <Navbar />}
+      {isSellerPath ? null : <Navbar />}  
       {showUserLogin ? <Login /> : null}
       <Toaster />
       <div
@@ -26,7 +26,7 @@ function App() {
       >
         <Routes>
           <Route path="/home" element={<Home />} />
-          {/* <Route path="/products" element={<AllProducts />} /> */}
+          <Route path="/products" element={<AllProducts />} />
         </Routes>
         {!isSellerPath && <Footer />}
       </div>
