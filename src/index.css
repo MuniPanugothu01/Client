@@ -1,0 +1,51 @@
+@import "tailwindcss";
+* {
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* index.css */
+
+:root {
+  /* Primary Branding Colors */
+  --color-primary: #4f46e5; /* Indigo-600 */
+  --color-primary-dull: #e0e7ff; /* Indigo-100 */
+
+  /* Backgrounds */
+  --color-bg: #f9fafb; /* Gray-50 */
+  --color-bg-secondary: #ffffff; /* Pure White */
+
+  /* Text Colors */
+  --color-text: #111827; /* Gray-900 */
+  --color-text-muted: #6b7280; /* Gray-500 */
+
+  /* Accent Colors */
+  --color-accent: #2dd4bf; /* Teal-400 */
+  --color-accent-hover: #0d9488; /* Teal-600 */
+
+  /* Feedback Colors */
+  --color-success: #16a34a; /* Green-600 */
+  --color-danger: #dc2626; /* Red-600 */
+  --color-warning: #eab308; /* Yellow-500 */
+}
+
+/* Example usage */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #4338ca; /* Indigo-700 */
+}
+
+.section-muted {
+  background-color: var(--color-primary-dull);
+}
