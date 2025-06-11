@@ -53,7 +53,7 @@ const SellerLogin = () => {
 
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-full transition duration-150"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded-full transition duration-150 cursor-pointer"
           >
             Login
           </button>
