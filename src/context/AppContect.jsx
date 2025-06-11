@@ -43,7 +43,7 @@ export const AppContextProvider = ({ children }) => {
 
   // Update cart Item Quantity
   const updateCartItem = (itemId, quantity) => {
-    let cartData = structuredClone(itemId);
+    let cartData = structuredClone(cartItems);
     cartData[itemId] = quantity;
     setCartItems(cartData);
     toast.success("Cart Updated!");
@@ -80,7 +80,7 @@ export const AppContextProvider = ({ children }) => {
         totalAmount += itemInfo.offerPrice * cartItems[items];
       }
     }
-    return Math.flor(totalAmount * 100) / 100;
+    return Math.floor(totalAmount * 100) / 100;
   };
 
   // use the useEffect whenever the component is render
