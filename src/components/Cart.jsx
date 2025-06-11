@@ -198,8 +198,7 @@ const Cart = () => {
           <p className="flex justify-between">
             <span>Price</span>
             <span>
-              {currency}
-              {getCartCount()}{" "}
+              {currency}{getCartCount()}{" "}
             </span>
           </p>
           <p className="flex justify-between">
@@ -209,13 +208,13 @@ const Cart = () => {
           <p className="flex justify-between">
             <span>Tax (2%)</span>
             <span>
-              {currency} {(getcartAmount() * 2) / 100}{" "}
+              {currency}{(getcartAmount() * 2) / 100}{" "}
             </span>
           </p>
           <p className="flex justify-between text-lg font-medium mt-3">
             <span>Total Amount:</span>
             <span>
-              {currency} {getcartAmount() + (getcartAmount() * 2) / 100}
+              {currency}{getcartAmount() + (getcartAmount() * 2) / 100}
             </span>
           </p>
         </div>
