@@ -39,7 +39,6 @@ const SellerLogin = () => {
               required
             />
           </div>
-
           <div className="w-full">
             <p className="mb-1 text-gray-700 dark:text-gray-300">Password</p>
             <input
