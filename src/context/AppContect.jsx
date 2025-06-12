@@ -3,6 +3,11 @@ import { createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
+import axios from "axios";
+
+// backend url connection
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 // Create context
 export const AppContext = createContext();
 
@@ -105,7 +110,8 @@ export const AppContextProvider = ({ children }) => {
     searchQuery,
     setSearchQuery,
     getcartAmount,
-    getCartCount, 
+    getCartCount,
+    axios,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
