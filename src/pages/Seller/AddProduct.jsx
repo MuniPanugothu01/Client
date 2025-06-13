@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { assets, categories } from "../../assets/assets";
-
+import toast from "react-hot-toast";
+import { useAppContext } from "../../context/AppContect";
 const AddProduct = () => {
   const [files, setFiles] = useState([]);
   const [name, setName] = useState("");
@@ -9,9 +10,44 @@ const AddProduct = () => {
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
 
+  const { axios } = useAppContext();
+
   // onsubmit handler function
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    try {
+      const productData = {
+        name,
+        description,
+        category,
+        price,
+        offerPrice,
+      };
+
+      const formData = new FormData();
+      formData.append("productData", JSON.stringify(productData));
+      for (let i = 0; i < files.length; i++) {
+        formData.append("images", files[i]);
+      }
+
+      const { data } = await axios.post("/api/product/add", formData);
+
+      if (data.success) {
+        toast.success("Product added successfully");
+        // Clear form inputs
+        setName("");
+        setDescription("");
+        setCategory("");
+        setPrice("");
+        setOfferPrice("");
+        setFiles([]);
+      } else {
+        toast.error(data.message || "Failed to add product");
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      toast.error(error?.response?.data?.message || error.message);
+    }
   };
 
   return (
@@ -29,9 +65,11 @@ const AddProduct = () => {
                 <label key={index} htmlFor={`image${index}`}>
                   <input
                     onChange={(e) => {
-                      const updatedFiles = [...files];
-                      updatedFiles[index] = e.target.files[0];
-                      setFiles(updatedFiles);
+                      const newFiles = [...files];
+                      if (e.target.files[0]) {
+                        newFiles[index] = e.target.files[0];
+                        setFiles(newFiles.filter(Boolean)); // remove undefined
+                      }
                     }}
                     accept="image/*"
                     type="file"

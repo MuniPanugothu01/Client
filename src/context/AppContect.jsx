@@ -28,9 +28,34 @@ export const AppContextProvider = ({ children }) => {
   // Search query
   const [searchQuery, setSearchQuery] = useState({});
 
+  //  Fetch Seller Status .function for this will check wheather the seller is authicanted or not
+  const fetchSeller = async () => {
+    try {
+      // api call
+      const { data } = await axios.get("/api/seller/is-auth");
+      if (data.success) {
+        setIsSeller(false);
+        // navigate('/seller')
+      } else {
+        setIsSeller(true);
+        navigate("/home");
+      }
+    } catch (error) {
+      setIsSeller(false);
+    }
+  };
+
   // fetech the products
   const fetchProducts = async () => {
     setProducts(dummyProducts);
+    // try {
+    //   const { data } = await axios.get("/api/product/list");
+    //   if (data.success) {
+    //     setProducts(data.products);
+    //   }
+    // } catch (error) {
+    //   console.error("Failed to fetch products:", error.message);
+    // }
   };
 
   // create an function update, add product to cart
@@ -90,6 +115,7 @@ export const AppContextProvider = ({ children }) => {
 
   // use the useEffect whenever the component is render
   useEffect(() => {
+    fetchSeller();
     fetchProducts();
   }, []);
 
