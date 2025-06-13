@@ -47,15 +47,17 @@ export const AppContextProvider = ({ children }) => {
 
   // fetech the products
   const fetchProducts = async () => {
-    setProducts(dummyProducts);
-    // try {
-    //   const { data } = await axios.get("/api/product/list");
-    //   if (data.success) {
-    //     setProducts(data.products);
-    //   }
-    // } catch (error) {
-    //   console.error("Failed to fetch products:", error.message);
-    // }
+    // setProducts(dummyProducts);
+    try {
+      const { data } = await axios.get("/api/product/list");
+      if (data.success) {
+        setProducts(data.products);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Failed to fetch products:", error.message);
+    }
   };
 
   // create an function update, add product to cart
@@ -138,6 +140,7 @@ export const AppContextProvider = ({ children }) => {
     getcartAmount,
     getCartCount,
     axios,
+    fetchProducts,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
