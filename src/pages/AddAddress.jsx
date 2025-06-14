@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContect";
+import toast from "react-hot-toast";
 
 // Input Field Component
 const InputField = ({ type, placeholder, name, handleChange, address }) => (
@@ -9,15 +11,24 @@ const InputField = ({ type, placeholder, name, handleChange, address }) => (
     placeholder={placeholder}
     onChange={handleChange}
     name={name}
-    value={address[name]}
+    value={address[name] || ""}
     required
   />
 );
 
 const AddAddress = () => {
+  const { axios, user, navigate } = useAppContext();
+
   const [address, setAddress] = useState({
     firstName: "",
     lastName: "",
+    email: "",
+    street: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    country: "",
+    phone: "",
   });
 
   const handleChange = (e) => {
@@ -26,9 +37,41 @@ const AddAddress = () => {
       ...prevAddress,
       [name]: value,
     }));
-    console.log(address);
-    
   };
+
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+
+    if (!user || !user._id) {
+      toast.error("User not found.");
+      return;
+    }
+
+    try {
+      const payload = {
+        ...address,
+        userId: user._id,
+      };
+
+      const { data } = await axios.post("/api/address/add", payload);
+
+      if (data.success) {
+        toast.success(data.message);
+        navigate("/cart");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    if (user === null) return;
+    if (!user) {
+      navigate("/cart");
+    }
+  }, [user]);
 
   return (
     <div className="mt-16 pb-16">
@@ -39,9 +82,10 @@ const AddAddress = () => {
           Address
         </span>
       </p>
+
       <div className="flex flex-col-reverse md:flex-row justify-between mt-10">
         <div className="flex-1 max-w-md">
-          <form className="space-y-4 mt-6 text-sm">
+          <form className="space-y-4 mt-6 text-sm" onSubmit={onSubmitHandler}>
             <div className="grid grid-cols-2 gap-4">
               <InputField
                 handleChange={handleChange}
@@ -82,7 +126,6 @@ const AddAddress = () => {
                 type="text"
                 placeholder="Enter city Name"
               />
-
               <InputField
                 handleChange={handleChange}
                 address={address}
@@ -97,10 +140,9 @@ const AddAddress = () => {
                 handleChange={handleChange}
                 address={address}
                 name="zipcode"
-                type="number"
+                type="text"
                 placeholder="Enter zipcode"
               />
-
               <InputField
                 handleChange={handleChange}
                 address={address}
@@ -114,15 +156,19 @@ const AddAddress = () => {
               handleChange={handleChange}
               address={address}
               name="phone"
-              type="number"
+              type="text"
               placeholder="Enter phone number"
             />
 
-            <button className="w-full mt-6 bg-blue-400 text-white py-3 rounded-[50px] hover:bg-blue-500 transition cursor-pointer uppercase">
+            <button
+              type="submit"
+              className="w-full mt-6 bg-blue-400 text-white py-3 rounded-[50px] hover:bg-blue-500 transition cursor-pointer uppercase"
+            >
               Save Address
             </button>
           </form>
         </div>
+
         <img
           className="md:mr-16 mb-16 md:mt-0"
           src={assets.add_address_iamge}
