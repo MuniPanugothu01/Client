@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContect";
 import { assets, dummyAddress } from "../assets/assets";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const {
@@ -12,12 +13,14 @@ const Cart = () => {
     updateCartItem,
     navigate,
     getcartAmount,
+    axios,
+    user,
   } = useAppContext();
   // usestate for cart
   const [cartArray, setCartArray] = useState([]);
-  const [addresses, setAddresses] = useState(dummyAddress);
+  const [addresses, setAddresses] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0]); // get first address
+  const [selectedAddress, setSelectedAddress] = useState(null); // get first address
   const [paymentOption, setPaymentOption] = useState("COD"); // cash on delivery
 
   const getCart = () => {
@@ -30,6 +33,24 @@ const Cart = () => {
     setCartArray(tempArray);
   };
 
+  // Address fetch
+  const getUserAddress = async () => {
+    try {
+      const { data } = await axios.get(`/api/address/get?userId=${user._id}`);
+      if (data.success) {
+        setAddresses(data.addresses);
+        if (data.addresses.length > 0) {
+          const latestAddress = data.addresses[data.addresses.length - 1]; // Get most recent
+          setSelectedAddress(latestAddress);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const placeOrder = async () => {};
 
   // create useEffect it execute the function
@@ -38,6 +59,14 @@ const Cart = () => {
       getCart();
     }
   }, [products, cartItems]);
+
+  // useEffect
+
+  useEffect(() => {
+    if (user) {
+      getUserAddress();
+    }
+  }, [user]);
 
   return products.length > 0 && cartItems ? (
     <div className="flex flex-col md:flex-row mt-16">
@@ -198,7 +227,8 @@ const Cart = () => {
           <p className="flex justify-between">
             <span>Price</span>
             <span>
-              {currency}{getCartCount()}{" "}
+              {currency}
+              {getCartCount()}{" "}
             </span>
           </p>
           <p className="flex justify-between">
@@ -208,13 +238,15 @@ const Cart = () => {
           <p className="flex justify-between">
             <span>Tax (2%)</span>
             <span>
-              {currency}{(getcartAmount() * 2) / 100}{" "}
+              {currency}
+              {(getcartAmount() * 2) / 100}{" "}
             </span>
           </p>
           <p className="flex justify-between text-lg font-medium mt-3">
             <span>Total Amount:</span>
             <span>
-              {currency}{getcartAmount() + (getcartAmount() * 2) / 100}
+              {currency}
+              {getcartAmount() + (getcartAmount() * 2) / 100}
             </span>
           </p>
         </div>
