@@ -51,7 +51,9 @@ const Cart = () => {
     }
   };
 
-  const placeOrder = async () => {};
+  const placeOrder = async () => {
+    
+  };
 
   // create useEffect it execute the function
   useEffect(() => {
