@@ -112,8 +112,10 @@ const ProductDetails = () => {
               {product.price}
             </p>
             <p className="text-2xl font-medium">
-              MRP: {currency} {product.offerPrice}
+              MRP: {currency}
+              {Number(product.offerPrice).toFixed(2)}
             </p>
+
             <span className="text-gray-500/70">(inclusive of all taxes)</span>
           </div>
 
