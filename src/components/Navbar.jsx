@@ -26,7 +26,7 @@ const Navbar = () => {
         toast.success(data.message);
         setUser(null);
         // setTimeout(() => {
-          navigate("/home");
+          navigate("/");
         // }, 200);
       } else {
         toast.error(data.message);
@@ -48,13 +48,13 @@ const Navbar = () => {
   };
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all">
-      <NavLink to="/home" onClick={() => setOpen(false)}>
+      <NavLink to="/" onClick={() => setOpen(false)}>
         <img className="h-9" src={assets.logo} alt="dummyLogoColored" />
       </NavLink>
 
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-8">
-        <NavLink to="/home">Home</NavLink>
+        <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/products">All Products</NavLink>
         <NavLink to="/">Contact</NavLink>
@@ -147,7 +147,7 @@ const Navbar = () => {
           } absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
         >
           <NavLink
-            to="/home"
+            to="/"
             onClick={() => {
               setOpen(false);
             }}

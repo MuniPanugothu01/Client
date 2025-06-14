@@ -37,7 +37,7 @@ function App() {
         className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}
       >
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/products" element={<AllProducts />} />
           <Route path="/products/:category" element={<ProductCategory />} />
           <Route path="/products/:category/:id" element={<ProductDetails />} />

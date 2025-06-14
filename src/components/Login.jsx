@@ -27,7 +27,7 @@ const Login = () => {
       });
 
       if (data.success) {
-        navigate("/home");
+        navigate("/");
         setUser(data.user);
         setShowUserLogin(false);
       } else {

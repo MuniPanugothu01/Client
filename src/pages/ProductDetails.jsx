@@ -57,7 +57,7 @@ const ProductDetails = () => {
     <div className="mt-12">
       {/* Breadcrumb */}
       <p>
-        <Link to="/home">Home</Link> /<Link to="/products"> Products</Link> /
+        <Link to="/">Home</Link> /<Link to="/products"> Products</Link> /
         <Link to={`/products/${product.category.toLowerCase()}`}>
           {" "}
           {product.category}

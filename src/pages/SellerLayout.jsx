@@ -22,7 +22,7 @@ const SellerLayout = () => {
       const { data } = await axios.get("/api/seller/logout");
       if (data.success) {
         toast.success(data.message);
-        navigate("/home");
+        navigate("/");
       } else {
         toast.error(data.message); // error msg we can get from api response
       }
