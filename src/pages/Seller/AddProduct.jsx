@@ -21,7 +21,7 @@ const AddProduct = () => {
         description,
         category,
         price,
-        offerPrice,
+        offerPrice, 
       };
 
       const formData = new FormData();

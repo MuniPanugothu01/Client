@@ -6,6 +6,8 @@ const ProductCard = ({ product }) => {
   const { currency, addToCart, removeFromCart, cartItems, navigate } =
     useAppContext();
 
+   console.log(product.image[0],'images')
+
   return (
     product && (
       <div
@@ -20,9 +22,10 @@ const ProductCard = ({ product }) => {
         <div className="group cursor-pointer flex items-center justify-center px-2">
           <img
             className="group-hover:scale-105 transition max-w-26 md:max-w-36"
-            src={product.image?.[0] || assets.placeholder_image}
+            src={product.image || assets.placeholder_image}
             alt={product.name || "Product image"}
           />
+          
         </div>
         <div className="text-gray-500/60 text-sm">
           <p>{product.category}</p>
