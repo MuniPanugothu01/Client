@@ -28,8 +28,10 @@ const Cart = () => {
     let tempArray = [];
     for (const key in cartItems) {
       const product = products.find((item) => item._id === key);
-      product.quantity = cartItems[key];
-      tempArray.push(product);
+      if (product) {
+        product.quantity = cartItems[key];
+        tempArray.push(product);
+      }
     }
     setCartArray(tempArray);
   };
@@ -74,8 +76,7 @@ const Cart = () => {
         } else {
           toast.error(data.message);
         }
-      }
-      else{
+      } else {
         // Place Order with Stripe
         const { data } = await axios.post("/api/order/stripe", {
           userId: user._id,
@@ -87,11 +88,10 @@ const Cart = () => {
         });
 
         if (data.success) {
-          window.location.replace(data.url)
+          window.location.replace(data.url);
         } else {
           toast.error(data.message);
         }
-
       }
     } catch (error) {
       toast.error(error.message);
