@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContect";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 const SellerLogin = () => {
   const { isSeller, setIsSeller, navigate, axios } = useAppContext();
@@ -78,3 +79,4 @@ const SellerLogin = () => {
 };
 
 export default SellerLogin;
+

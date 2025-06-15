@@ -24,7 +24,7 @@ const MainBanner = () => {
           {/* Fixed: bg-primary & hover:bg-primary-dull changed to valid Tailwind classes */}
           <Link
             to={"/products"}
-            className="group flex items-center gap-2 px-7 md:px-9 py-3 bg-indigo-600 hover:bg-indigo-700 transition rounded text-white cursor-pointer"
+            className="group flex items-center gap-2 px-7 md:px-7 py-3 bg-indigo-600 hover:bg-indigo-700 transition rounded text-white cursor-pointer"
           >
             Shop Now
             <img
