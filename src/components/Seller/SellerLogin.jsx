@@ -16,7 +16,7 @@ const SellerLogin = () => {
         password,
       });
       if (data.success) {
-        setIsSeller(false);
+        setIsSeller(true);
         navigate("/seller");
       } else {
         toast.error(data.message);

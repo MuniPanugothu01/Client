@@ -23,6 +23,9 @@ export const AppContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
   const [searchQuery, setSearchQuery] = useState({});
 
+
+  console.log(isSeller,'login seller');
+  
   // ✅ Fetch Seller Auth Status
   // const fetchSeller = async () => {
   //   try {
