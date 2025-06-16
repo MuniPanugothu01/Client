@@ -42,7 +42,8 @@ const AddAddress = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
-    if (!user || !user._id) {
+    
+    if (!user || !user._id) { 
       toast.error("User not found.");
       return;
     }
@@ -50,7 +51,7 @@ const AddAddress = () => {
     try {
       const payload = {
         ...address,
-        userId: user._id,
+        // userId: user._id, 
       };
 
       const { data } = await axios.post("/api/address/add", payload);
