@@ -18,6 +18,8 @@ const SellerLogin = () => {
       if (data.success) {
         setIsSeller(true);
         navigate("/seller");
+        console.log(data,'seller data');
+        
       } else {
         toast.error(data.message);
       }
