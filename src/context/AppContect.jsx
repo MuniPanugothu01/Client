@@ -40,8 +40,6 @@ import { use } from "react";
 
 
 console.log(user,'user id');
-
-    l
     const fetchSeller = async () => {
       const isSellerCookie = Cookies.get("isSeller");
       try {
