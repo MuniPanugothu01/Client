@@ -26,7 +26,7 @@ const Navbar = () => {
         toast.success(data.message);
         setUser(null);
         // setTimeout(() => {
-          navigate("/");
+        navigate("/");
         // }, 200);
       } else {
         toast.error(data.message);
