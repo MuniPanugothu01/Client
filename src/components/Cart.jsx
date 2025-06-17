@@ -1,421 +1,309 @@
-// import React, { useEffect, useState } from "react";
-// import { useAppContext } from "../context/AppContect";
-// import { assets, dummyAddress } from "../assets/assets";
-// import toast from "react-hot-toast";
-
-// const Cart = () => {
-//   const {
-//     products,
-//     currency,
-//     cartItems,
-//     removeFromCart,
-//     getCartCount,
-//     updateCartItem,
-//     navigate,
-//     getcartAmount,
-//     axios,
-//     user,
-//     setCartItems,
-//   } = useAppContext();
-//   // usestate for cart
-//   const [cartArray, setCartArray] = useState([]);
-//   const [addresses, setAddresses] = useState([]);
-//   const [showAddress, setShowAddress] = useState(false);
-//   const [selectedAddress, setSelectedAddress] = useState(null); // get first address
-//   const [paymentOption, setPaymentOption] = useState("COD"); // cash on delivery
-
-//   const getCart = () => {
-//     let tempArray = [];
-//     for (const key in cartItems) {
-//       const product = products.find((item) => item._id === key);
-//       if (product) {
-//         product.quantity = cartItems[key];
-//         tempArray.push(product);
-//       }
-//     }
-//     setCartArray(tempArray);
-//   };
-
-//   // Address fetch
-//   const getUserAddress = async () => {
-//     try {
-//       const { data } = await axios.get(`/api/address/get?userId=${user._id}`);
-//       if (data.success) {
-//         setAddresses(data.addresses);
-//         if (data.addresses.length > 0) {
-//           const latestAddress = data.addresses[data.addresses.length - 1]; // Get most recent
-//           setSelectedAddress(latestAddress);
-//         }
-//       } else {
-//         toast.error(data.message);
-//       }
-//     } catch (error) {
-//       toast.error(error.message);
-//     }
-//   };
-
-//   // PlaceOrder
-//   const placeOrder = async () => {
-//     try {
-//       if (!selectedAddress) return toast.error("Please select an address");
-
-//       if (paymentOption === "COD") {
-//         const { data } = await axios.post("/api/order/cod", {
-//           userId: user._id,
-//           items: cartArray.map((item) => ({
-//             product: item._id,
-//             quantity: item.quantity,
-//           })),
-//           address: selectedAddress._id,
-//         });
-
-//         if (data.success) {
-//           toast.success("Order placed successfully ❤️");
-//           setCartItems({});
-//           navigate("/my-orders");
-//         } else {
-//           toast.error(data.message);
-//         }
-//       } else {
-//         // Place Order with Stripe
-//         const { data } = await axios.post("/api/order/stripe", {
-//           userId: user._id,
-//           items: cartArray.map((item) => ({
-//             product: item._id,
-//             quantity: item.quantity,
-//           })),
-//           address: selectedAddress._id,
-//         });
-
-//         if (data.success) {
-//           window.location.replace(data.url);
-//         } else {
-//           toast.error(data.message);
-//         }
-//       }
-//     } catch (error) {
-//       toast.error(error.message);
-//     }
-//   };
-
-//   // create useEffect it execute the function
-//   useEffect(() => {
-//     if (products.length > 0 && cartItems) {
-//       getCart();
-//     }
-//   }, [products, cartItems]);
-
-//   // useEffect
-
-//   useEffect(() => {
-//     if (user) {
-//       getUserAddress();
-//     }
-//   }, [user]);
-
-//   return products.length > 0 && cartItems ? (
-//     <div className="flex flex-col md:flex-row mt-16">
-//       <div className="flex-1 max-w-4xl">
-//         <h1 className="text-3xl font-medium mb-6">
-//           Shopping Cart{" "}
-//           <span className="text-sm text-indigo-500">
-//             {getCartCount()} Items
-//           </span>
-//         </h1>
-
-//         <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
-//           <p className="text-left">Product Details</p>
-//           <p className="text-center">Subtotal</p>
-//           <p className="text-center">Action</p>
-//         </div>
-
-//         {cartArray.map((product, index) => (
-//           <div
-//             key={index}
-//             className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
-//           >
-//             <div className="flex items-center md:gap-6 gap-3">
-//               <div
-//                 onClick={() => {
-//                   navigate(
-//                     `/products/${product.category.toLowerCase()}/${product._id}`
-//                   );
-//                   scrollTo(0, 0);
-//                 }}
-//                 className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded"
-//               >
-//                 <img
-//                   className="max-w-full h-full object-cover"
-//                   src={product.image}
-//                   alt={product.name}
-//                 />
-//               </div>
-//               <div>
-//                 <p className="hidden md:block font-semibold">{product.name}</p>
-//                 <div className="font-normal text-gray-500/70">
-//                   <p>
-//                     Weight: <span>{product.weight || "N/A"}</span>
-//                   </p>
-//                   <div className="flex items-center">
-//                     <p>Qty:</p>
-//                     <select
-//                       onChange={(e) =>
-//                         updateCartItem(product._id, Number(e.target.value))
-//                       }
-//                       value={cartItems[product._id]}
-//                       className="outline-none"
-//                     >
-//                       {Array(
-//                         cartItems[product._id] > 9 ? cartItems[product._id] : 9
-//                       )
-//                         .fill("")
-//                         .map((_, index) => (
-//                           <option key={index} value={index + 1}>
-//                             {index + 1}
-//                           </option>
-//                         ))}
-//                     </select>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//             <p className="text-center">
-//               {currency}
-//               {product.offerPrice * product.quantity}
-//             </p>
-//             <button
-//               onClick={() => removeFromCart(product._id)}
-//               className="cursor-pointer mx-auto"
-//             >
-//               <img
-//                 src={assets.remove_icon}
-//                 alt="removeicon"
-//                 className="inline-block w-6 h-6"
-//               />
-//             </button>
-//           </div>
-//         ))}
-
-//         <button
-//           onClick={() => {
-//             navigate("/products");
-//             scrollTo(0, 0);
-//           }}
-//           className="group cursor-pointer flex items-center mt-8 gap-2 text-indigo-500 font-medium"
-//         >
-//           <img
-//             src={assets.arrow_right_icon_colored}
-//             alt="arrow"
-//             className="group-hover:-translate-x-1 transition"
-//           />
-//           Continue Shopping
-//         </button>
-//       </div>
-
-//       <div className="max-w-[360px] w-full bg-gray-100/40 p-5 max-md:mt-16 border border-gray-300/70">
-//         <h2 className="text-xl md:text-xl font-medium">Order Summary</h2>
-//         <hr className="border-gray-300 my-5" />
-
-//         <div className="mb-6">
-//           <p className="text-sm font-medium uppercase">Delivery Address</p>
-//           <div className="relative flex justify-between items-start mt-2">
-//             <p className="text-gray-500">
-//               {" "}
-//               {selectedAddress
-//                 ? `${selectedAddress.street},${selectedAddress.city}, ${selectedAddress.state},${selectedAddress.country} `
-//                 : "No address found"}{" "}
-//             </p>
-//             <button
-//               onClick={() => setShowAddress(!showAddress)}
-//               className="text-indigo-500 hover:underline cursor-pointer"
-//             >
-//               Change
-//             </button>
-//             {showAddress && (
-//               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-//                 {addresses.map((address, index) => (
-//                   <p
-//                     onClick={() => {
-//                       setSelectedAddress(address);
-//                       setShowAddress(false);
-//                     }}
-//                     className="text-gray-500 p-2 hover:bg-gray-100"
-//                   >
-//                     {address.street},{address.city},{address.state},
-//                     {address.country}
-//                   </p>
-//                 ))}
-//                 <p
-//                   onClick={() => navigate("/add-address")}
-//                   className="text-indigo-500 text-center cursor-pointer p-2 hover:bg-indigo-500/10"
-//                 >
-//                   Add address
-//                 </p>
-//               </div>
-//             )}
-//           </div>
-
-//           <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
-
-//           <select
-//             onChange={(e) => setPaymentOption(e.target.value)}
-//             className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none"
-//           >
-//             <option value="COD">Cash On Delivery</option>
-//             <option value="Online">Online Payment</option>
-//           </select>
-//         </div>
-
-//         <hr className="border-gray-300" />
-
-//         <div className="text-gray-500 mt-4 space-y-2">
-//           <p className="flex justify-between">
-//             <span>Price</span>
-//             <span>
-//               {currency}
-//               {getCartCount()}{" "}
-//             </span>
-//           </p>
-//           <p className="flex justify-between">
-//             <span>Shipping Fee</span>
-//             <span className="text-green-600">Free</span>
-//           </p>
-//           <p className="flex justify-between">
-//             <span>Tax (2%)</span>
-//             <span>
-//               {currency}
-//               {(getcartAmount() * 2) / 100}{" "}
-//             </span>
-//           </p>
-//           <p className="flex justify-between text-lg font-medium mt-3">
-//             <span>Total Amount:</span>
-//             <span>
-//               {currency}
-//               {getcartAmount() + (getcartAmount() * 2) / 100}
-//             </span>
-//           </p>
-//         </div>
-
-//         <button
-//           onClick={placeOrder}
-//           className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition"
-//         >
-//           {paymentOption === "COD" ? "Place Order" : "Processed to Checkout"}
-//         </button>
-//       </div>
-//     </div>
-//   ) : null;
-// };
-// export default Cart;
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContect";
-import { assets } from "../assets/assets";
+import { assets, dummyAddress } from "../assets/assets";
 import toast from "react-hot-toast";
 
 const Cart = () => {
   const {
+    products,
+    currency,
     cartItems,
-    food_list,
     removeFromCart,
-    getTotalCartAmount,
-    user,
+    getCartCount,
+    updateCartItem,
     navigate,
+    getcartAmount,
     axios,
+    user,
     setCartItems,
   } = useAppContext();
+  // usestate for cart
+  const [cartArray, setCartArray] = useState([]);
+  const [addresses, setAddresses] = useState([]);
+  const [showAddress, setShowAddress] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null); // get first address
+  const [paymentOption, setPaymentOption] = useState("COD"); // cash on delivery
 
-  const placeOrder = async () => {
-    if (!user) {
-      toast.error("Please login to place an order");
-      return;
+  const getCart = () => {
+    let tempArray = [];
+    for (const key in cartItems) {
+      const product = products.find((item) => item._id === key);
+      if (product) {
+        product.quantity = cartItems[key];
+        tempArray.push(product);
+      }
     }
+    setCartArray(tempArray);
+  };
 
-    const orderItems = food_list.filter((item) => cartItems[item._id] > 0);
-    const orderData = {
-      userId: user._id,
-      items: orderItems.map((item) => ({
-        foodId: item._id,
-        quantity: cartItems[item._id],
-      })),
-      amount: getTotalCartAmount(),
-    };
-
+  // Address fetch
+  const getUserAddress = async () => {
     try {
-      const { data } = await axios.post("/api/order/place", orderData);
+      const { data } = await axios.get(`/api/address/get?userId=${user._id}`);
       if (data.success) {
-        toast.success("Order placed successfully ❤️");
-        setCartItems({});
-        navigate("/my-orders"); // ✅ updated route
+        setAddresses(data.addresses);
+        if (data.addresses.length > 0) {
+          const latestAddress = data.addresses[data.addresses.length - 1]; // Get most recent
+          setSelectedAddress(latestAddress);
+        }
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Error placing order");
+      toast.error(error.message);
     }
   };
 
-  return (
-    <div className="px-6 md:px-16 lg:px-24 xl:px-32 py-10">
-      <div className="flex flex-col gap-5">
-        <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
+  // PlaceOrder
+  const placeOrder = async () => {
+    try {
+      if (!selectedAddress) return toast.error("Please select an address");
 
-        {food_list.map((item) => {
-          const quantity = cartItems[item._id] || 0;
-          if (quantity === 0) return null;
-          return (
-            <div
-              key={item._id}
-              className="flex items-center justify-between border-b pb-4"
-            >
-              <div className="flex items-center gap-4">
+      if (paymentOption === "COD") {
+        const { data } = await axios.post("/api/order/cod", {
+          userId: user._id,
+          items: cartArray.map((item) => ({
+            product: item._id,
+            quantity: item.quantity,
+          })),
+          address: selectedAddress._id,
+        });
+
+        if (data.success) {
+          toast.success("Order placed successfully ❤️");
+          setCartItems({});
+          navigate("/my-orders");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        // Place Order with Stripe
+        const { data } = await axios.post("/api/order/stripe", {
+          userId: user._id,
+          items: cartArray.map((item) => ({
+            product: item._id,
+            quantity: item.quantity,
+          })),
+          address: selectedAddress._id,
+        });
+
+        if (data.success) {
+          window.location.replace(data.url);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  // create useEffect it execute the function
+  useEffect(() => {
+    if (products.length > 0 && cartItems) {
+      getCart();
+    }
+  }, [products, cartItems]);
+
+  // useEffect
+
+  useEffect(() => {
+    if (user) {
+      getUserAddress();
+    }
+  }, [user]);
+
+  return products.length > 0 && cartItems ? (
+    <div className="flex flex-col md:flex-row mt-16">
+      <div className="flex-1 max-w-4xl">
+        <h1 className="text-3xl font-medium mb-6">
+          Shopping Cart{" "}
+          <span className="text-sm text-indigo-500">
+            {getCartCount()} Items
+          </span>
+        </h1>
+
+        <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
+          <p className="text-left">Product Details</p>
+          <p className="text-center">Subtotal</p>
+          <p className="text-center">Action</p>
+        </div>
+
+        {cartArray.map((product, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 items-center text-sm md:text-base font-medium pt-3"
+          >
+            <div className="flex items-center md:gap-6 gap-3">
+              <div
+                onClick={() => {
+                  navigate(
+                    `/products/${product.category.toLowerCase()}/${product._id}`
+                  );
+                  scrollTo(0, 0);
+                }}
+                className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded"
+              >
                 <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded"
+                  className="max-w-full h-full object-cover"
+                  src={product.image}
+                  alt={product.name}
                 />
-                <div>
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    ₹{item.price} × {quantity}
+              </div>
+              <div>
+                <p className="hidden md:block font-semibold">{product.name}</p>
+                <div className="font-normal text-gray-500/70">
+                  <p>
+                    Weight: <span>{product.weight || "N/A"}</span>
                   </p>
+                  <div className="flex items-center">
+                    <p>Qty:</p>
+                    <select
+                      onChange={(e) =>
+                        updateCartItem(product._id, Number(e.target.value))
+                      }
+                      value={cartItems[product._id]}
+                      className="outline-none"
+                    >
+                      {Array(
+                        cartItems[product._id] > 9 ? cartItems[product._id] : 9
+                      )
+                        .fill("")
+                        .map((_, index) => (
+                          <option key={index} value={index + 1}>
+                            {index + 1}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <p className="font-semibold">₹{item.price * quantity}</p>
-                <img
-                  src={assets.cross_icon}
-                  alt="remove"
-                  onClick={() => removeFromCart(item._id)}
-                  className="w-4 h-4 cursor-pointer opacity-70 hover:opacity-100"
-                />
-              </div>
             </div>
-          );
-        })}
+            <p className="text-center">
+              {currency}
+              {product.offerPrice * product.quantity}
+            </p>
+            <button
+              onClick={() => removeFromCart(product._id)}
+              className="cursor-pointer mx-auto"
+            >
+              <img
+                src={assets.remove_icon}
+                alt="removeicon"
+                className="inline-block w-6 h-6"
+              />
+            </button>
+          </div>
+        ))}
 
-        {getTotalCartAmount() > 0 ? (
-          <>
-            <div className="flex justify-end text-lg font-bold pt-4">
-              Total: ₹{getTotalCartAmount()}
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={placeOrder}
-                className="px-6 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full transition"
-              >
-                Place Order
-              </button>
-            </div>
-          </>
-        ) : (
-          <p className="text-center text-gray-500 mt-10">
-            Your cart is empty 🛒
+        <button
+          onClick={() => {
+            navigate("/products");
+            scrollTo(0, 0);
+          }}
+          className="group cursor-pointer flex items-center mt-8 gap-2 text-indigo-500 font-medium"
+        >
+          <img
+            src={assets.arrow_right_icon_colored}
+            alt="arrow"
+            className="group-hover:-translate-x-1 transition"
+          />
+          Continue Shopping
+        </button>
+      </div>
+
+      <div className="max-w-[360px] w-full bg-gray-100/40 p-5 max-md:mt-16 border border-gray-300/70">
+        <h2 className="text-xl md:text-xl font-medium">Order Summary</h2>
+        <hr className="border-gray-300 my-5" />
+
+        <div className="mb-6">
+          <p className="text-sm font-medium uppercase">Delivery Address</p>
+          <div className="relative flex justify-between items-start mt-2">
+            <p className="text-gray-500">
+              {" "}
+              {selectedAddress
+                ? `${selectedAddress.street},${selectedAddress.city}, ${selectedAddress.state},${selectedAddress.country} `
+                : "No address found"}{" "}
+            </p>
+            <button
+              onClick={() => setShowAddress(!showAddress)}
+              className="text-indigo-500 hover:underline cursor-pointer"
+            >
+              Change
+            </button>
+            {showAddress && (
+              <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
+                {addresses.map((address, index) => (
+                  <p
+                    onClick={() => {
+                      setSelectedAddress(address);
+                      setShowAddress(false);
+                    }}
+                    className="text-gray-500 p-2 hover:bg-gray-100"
+                  >
+                    {address.street},{address.city},{address.state},
+                    {address.country}
+                  </p>
+                ))}
+                <p
+                  onClick={() => navigate("/add-address")}
+                  className="text-indigo-500 text-center cursor-pointer p-2 hover:bg-indigo-500/10"
+                >
+                  Add address
+                </p>
+              </div>
+            )}
+          </div>
+
+          <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
+
+          <select
+            onChange={(e) => setPaymentOption(e.target.value)}
+            className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none"
+          >
+            <option value="COD">Cash On Delivery</option>
+            <option value="Online">Online Payment</option>
+          </select>
+        </div>
+
+        <hr className="border-gray-300" />
+
+        <div className="text-gray-500 mt-4 space-y-2">
+          <p className="flex justify-between">
+            <span>Price</span>
+            <span>
+              {currency}
+              {getCartCount()}{" "}
+            </span>
           </p>
-        )}
+          <p className="flex justify-between">
+            <span>Shipping Fee</span>
+            <span className="text-green-600">Free</span>
+          </p>
+          <p className="flex justify-between">
+            <span>Tax (2%)</span>
+            <span>
+              {currency}
+              {(getcartAmount() * 2) / 100}{" "}
+            </span>
+          </p>
+          <p className="flex justify-between text-lg font-medium mt-3">
+            <span>Total Amount:</span>
+            <span>
+              {currency}
+              {getcartAmount() + (getcartAmount() * 2) / 100}
+            </span>
+          </p>
+        </div>
+
+        <button
+          onClick={placeOrder}
+          className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition"
+        >
+          {paymentOption === "COD" ? "Place Order" : "Processed to Checkout"}
+        </button>
       </div>
     </div>
-  );
+  ) : null;
 };
-
 export default Cart;
