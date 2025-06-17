@@ -1,7 +1,5 @@
 // import React, { useEffect } from "react";
 // import { NavLink } from "react-router-dom";
-
-// // import assests folder
 // import { assets } from "../assets/assets";
 // import { useAppContext } from "../context/AppContect";
 // import toast from "react-hot-toast";
@@ -18,16 +16,14 @@
 //     getCartCount,
 //     axios,
 //   } = useAppContext();
-//   // create a function to logout the user, Checks the user login status.
+
 //   const Logout = async () => {
 //     try {
 //       const { data } = await axios.get("/api/user/logout");
 //       if (data.success) {
 //         toast.success(data.message);
 //         setUser(null);
-//         // setTimeout(() => {
 //         navigate("/");
-//         // }, 200);
 //       } else {
 //         toast.error(data.message);
 //       }
@@ -36,27 +32,31 @@
 //     }
 //   };
 
-//   // UseEffect() for search bar
 //   useEffect(() => {
 //     if (searchQuery.length > 0) {
 //       navigate("/products");
 //     }
 //   }, [searchQuery]);
-//   // SearchHandleFunction
+
 //   const SearchHandleFunction = (event) => {
 //     setSearchQuery(event.target.value);
 //   };
+
 //   return (
 //     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white relative transition-all z-50">
-//       <NavLink to="/" onClick={() => setOpen(false)}>
+//       <NavLink
+//         to="/"
+//         onClick={() => setOpen(false)}
+//         className="flex items-center gap-2"
+//       >
 //         <img className="h-9" src={assets.logo} alt="dummyLogoColored" />
-//         <p>FRESH CART</p>
+//         <p className="font-semibold">FRESH CART</p>
 //       </NavLink>
 
 //       {/* Desktop Menu */}
 //       <div className="hidden sm:flex items-center gap-8">
 //         <NavLink to="/">Home</NavLink>
-//         <NavLink to="/about">My-Orders</NavLink>
+//         {user && <NavLink to="/my-orders">My Orders</NavLink>}
 //         <NavLink to="/products">All Products</NavLink>
 //         <NavLink to="/">Contact</NavLink>
 
@@ -79,26 +79,28 @@
 //             alt="CartIcon"
 //             className="w-6 opacity-80"
 //           />
-//           <button className="absolute -top-2 -rig ht-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
+//           <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
 //             {getCartCount()}
 //           </button>
 //         </div>
-//         {/* whenever user can not logged in */}
+
 //         {!user ? (
 //           <button
-//             onClick={() => {
-//               setShowUserLogin(true);
-//             }}
+//             onClick={() => setShowUserLogin(true)}
 //             className="cursor-pointer px-8 py-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full"
 //           >
 //             Login
 //           </button>
 //         ) : (
 //           <div className="relative group">
-//             <img src={assets.profile_icon} className="w-10" alt="" />
+//             <img
+//               src={assets.profile_icon}
+//               className="w-10 cursor-pointer"
+//               alt="profile"
+//             />
 //             <ul className="hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40">
 //               <li
-//                 onClick={() => navigate("my-orders")}
+//                 onClick={() => navigate("/about")}
 //                 className="p-1.5 pl-3 hover:bg-primary/10 cursor-pointer"
 //               >
 //                 My Orders
@@ -114,6 +116,7 @@
 //         )}
 //       </div>
 
+//       {/* Mobile Menu Icon */}
 //       <div className="flex items-center gap-6 sm:hidden">
 //         <div
 //           onClick={() => navigate("/cart")}
@@ -124,74 +127,34 @@
 //             alt="CartIcon"
 //             className="w-6 opacity-80"
 //           />
-//           <button className="absolute -top-2 -rig ht-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
+//           <button className="absolute -top-2 -right-3 text-xs text-white bg-indigo-500 w-[18px] h-[18px] rounded-full">
 //             {getCartCount()}
 //           </button>
 //         </div>
 
-//         <button
-//           onClick={() => (open ? setOpen(false) : setOpen(true))}
-//           aria-label="Menu"
-//           className=""
-//         >
-//           {/* Menu Icon SVG */}
+//         <button onClick={() => setOpen(!open)} aria-label="Menu">
 //           <img src={assets.menu_icon} alt="menu_icon" />
 //         </button>
 //       </div>
 
 //       {/* Mobile Menu */}
-//       {/* when ever open state is true then only open state can open */}
 //       {open && (
-//         <div
-//           className={`${
-//             open ? "flex" : "hidden"
-//           } absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex-col items-start gap-2 px-5 text-sm md:hidden`}
-//         >
-//           <NavLink
-//             to="/"
-//             onClick={() => {
-//               setOpen(false);
-//             }}
-//           >
+//         <div className="absolute top-[60px] left-0 w-full bg-white shadow-md py-4 flex flex-col items-start gap-2 px-5 text-sm md:hidden">
+//           <NavLink to="/" onClick={() => setOpen(false)}>
 //             Home
 //           </NavLink>
-//           <NavLink
-//             to="/about"
-//             onClick={() => {
-//               setOpen(false);
-//             }}
-//           >
-//             About
-//           </NavLink>
-//           <NavLink
-//             to="/products"
-//             onClick={() => {
-//               setOpen(false);
-//             }}
-//           >
-//             All Products
-//           </NavLink>
 //           {user && (
-//             <NavLink
-//               to="/products"
-//               onClick={() => {
-//                 setOpen(false);
-//               }}
-//             >
+//             <NavLink to="/about" onClick={() => setOpen(false)}>
 //               My Orders
 //             </NavLink>
 //           )}
-
-//           <NavLink
-//             to="/"
-//             onClick={() => {
-//               setOpen(false);
-//             }}
-//           >
+//           <NavLink to="/products" onClick={() => setOpen(false)}>
+//             All Products
+//           </NavLink>
+//           <NavLink to="/" onClick={() => setOpen(false)}>
 //             Contact
 //           </NavLink>
 
-//           {/* whenever user login then it show the logout button */}
 //           {!user ? (
 //             <button
 //               onClick={() => {
@@ -203,9 +166,11 @@
 //               Login
 //             </button>
 //           ) : (
-//             // this button work as allow user to logout the form
 //             <button
-//               onClick={Logout}
+//               onClick={() => {
+//                 setOpen(false);
+//                 Logout();
+//               }}
 //               className="cursor-pointer px-6 py-2 mt-2 bg-indigo-500 hover:bg-indigo-600 transition text-white rounded-full text-sm"
 //             >
 //               Logout
@@ -218,7 +183,6 @@
 // };
 
 // export default Navbar;
-
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
@@ -277,7 +241,7 @@ const Navbar = () => {
       {/* Desktop Menu */}
       <div className="hidden sm:flex items-center gap-8">
         <NavLink to="/">Home</NavLink>
-        {user && <NavLink to="/about">My Orders</NavLink>}
+        {user && <NavLink to="/my-orders">My Orders</NavLink>}
         <NavLink to="/products">All Products</NavLink>
         <NavLink to="/">Contact</NavLink>
 
@@ -321,7 +285,7 @@ const Navbar = () => {
             />
             <ul className="hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40">
               <li
-                onClick={() => navigate("/about")}
+                onClick={() => navigate("/my-orders")}
                 className="p-1.5 pl-3 hover:bg-primary/10 cursor-pointer"
               >
                 My Orders
@@ -365,7 +329,7 @@ const Navbar = () => {
             Home
           </NavLink>
           {user && (
-            <NavLink to="/about" onClick={() => setOpen(false)}>
+            <NavLink to="/my-orders" onClick={() => setOpen(false)}>
               My Orders
             </NavLink>
           )}
