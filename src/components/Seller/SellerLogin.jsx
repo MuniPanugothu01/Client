@@ -176,7 +176,7 @@ const SellerLogin = () => {
         </div>
       </form>
     )
-  );
+  );  
 };
 
 export default SellerLogin;
