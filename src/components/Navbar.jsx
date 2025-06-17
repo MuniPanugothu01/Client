@@ -58,7 +58,7 @@ const Navbar = () => {
         <NavLink to="/">Home</NavLink>
         {/* <NavLink to="/about">About</NavLink> */}
         <NavLink to="/products">All Products</NavLink>
-        {/* <NavLink to="/">Contact</NavLink> */}
+        <NavLink to="/">Contact</NavLink>
 
         <div className="hidden lg:flex items-center text-sm gap-2 border border-gray-300 px-3 rounded-full">
           <input
